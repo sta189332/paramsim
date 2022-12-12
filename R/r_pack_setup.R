@@ -19,6 +19,6 @@ sinew::makeOxygen(arimasim)
 usethis::use_git()
 usethis::use_test()
 devtools::test()
-testthat::test_check(arimasimsearch)
+testthat::test_check(arimasims)
 usethis::use_cran_comments(open = rlang::is_interactive()) # before you submit to CRAN
 devtools::release() # to send package to CRAN

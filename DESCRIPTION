@@ -1,0 +1,26 @@
+Package: paramsim
+Type: Package
+Title: Parametarized Simulation in R
+Version: 0.1.0
+Authors@R: c(
+  person("Daniel", "James", email = "futathesis@gmail.com", role = c("cre","aut")),
+  person("Ayinde", "Kayode", email = "kayinde@futa.edu.ng", role = "aut"))
+Maintainer: Daniel James <futathesis@gmail.com>
+Description: Simulate data set according to a/some parameter(s) of a distribution.
+Depends:
+  R (>= 4.2.0)
+Imports:
+  forecast,
+  foreach,
+  parallel,
+  doParallel,
+  future,
+  stats,
+  tibble
+License: GPL (>= 2)
+Encoding: UTF-8
+RoxygenNote: 7.2.3
+LazyData: true
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

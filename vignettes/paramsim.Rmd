@@ -1,0 +1,209 @@
+---
+title: "paramsim"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{paramsim}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+#bibliography: "economia.bib"
+#logo: obl.PNG
+---
+  
+  
+```{r setup2, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      comment = "",
+                      collapse = TRUE,
+                      error = TRUE, # do not interrupt in case of errors
+                      message = FALSE,
+                      warning = FALSE,
+                      comma = function(x) format(x, digits = 2, big.mark = ",")
+)
+```
+
+```{r setup}
+library(paramsim)
+```
+
+## Introduction
+
+The issue of simulation is significant (and broad) for both statistics and a wide range of other fields. Military simulations, usually referred to colloquially as war games, are simulations that allow for the testing and improvement of military doctrines without the necessity for real combat. The development of tactical, strategic, and doctrinal alternatives is considered as a helpful use of military simulations. in business world, Before entering the workforce or beginning a new career, individuals may practise professional scenarios via business simulators, which are immersive learning experiences. In sport, the method of simulation involves simulating on a computer the precise impacts that an athlete is expected to feel during competition. The simulation may be created to either project the intended outcome for the specific athlete or team, or to replicate the ideal competitive or racing atmosphere. In Statistics, Computer-based simulation studies generate data by sampling at pseudo-random from pre-existing probability distributions. They are a crucial tool for statistical research, particularly for assessing novel approaches and comparing different techniques. In general, A simulation is an ongoing replica of how a system or process might work in the actual world.
+
+## data simulation
+
+The goal of simulations is to recreate the process of taking repeated (random) samples from a large population. To do this, simulations repeatedly produce synthetic data (also known as "virtual observations") from a virtual population while making predetermined assumptions that can vary depending on the simulation scenario being considered. Each synthetic sample is created from a certain known distribution, with the researchers fixing the "actual" values of all pertinent parameters. The performance of each simulated sample is then assessed using predetermined criteria after being subjected to the relevant method(s) of analysis. Evidently, when one simulate from a predetermine distribution, one is collecting virtual sample from the virtual population at random. The estimate of such sample may (most times are not always) equal to the perimeters of the virtual population.
+
+
+## Statement of Problem
+
+The majority of the time, one must simulate data that not only derives from a distribution but is also anticipated to have one or more particular values for the distribution parameter estimate (s). Most of the time, one can only simulate data that is defined to come from a distribution with one or more stated parameters, and after the simulation, when the stated parameter(s) is/are estimated for from the simulated data, the estimate(s) frequently deviate from the population parameter that was set.
+
+## About the Package
+
+To solve the problem of estimates not being equal to the population parameters, this package is designed to help search so the RNG seed that produce exactly or something similar to 
+
+## Instalation
+
+You can install the development version from GitHub with:
+
+```{r instalation, include = TRUE, eval = FALSE}
+install.packages("devtools")
+devtools::install_github("sta189332/paramsim")
+```
+
+## Description
+
+arimasim function obtains a Random Number Generator (RNG) or collection of RNGs that replicate the required parameter(s) of a distribution for a time series of data. Consider the case of reproducing a time series data set of size 20 that uses an autoregressive (AR) model with phi = "0.8" and standard deviation equal to 1. When one checks the "arima.sin" function's estimated parameters, it's possible that after a single trial or a few more, one won't find the precise parameters. This enables one to look for the ideal RNG setting for a simulation that will accurately duplicate the desired parameters.
+
+
+## Usage
+
+The minimum arguments in the function `arimasim()` can be the `n' 'a', 'z', 'j1', 'p', 'ar', 'order', 'sd', 'n_cores`  for simulating autoregrassive model of order one or `n' 'a', 'z', 'k1', 'q', 'ar', 'order', 'sd', 'n_cores`  for simulating moving average model of order one which should be a univirate time series data.
+
+```{r usage_blockboot, include = TRUE, eval = FALSE}
+
+arimasim <- paramsim::arimasim(a = 280000,  z = 290000, n = 10, p = 1, d = 0, q = 0, ar11 = 0.8, sd = 1, j1 = 4, arr1 = "0.80", n_cores = 1)
+```
+
+### Argument
+
+:::::::::::::: {.columns}
+::: {.column width="20%"}
+
+a
+
+z
+
+n
+
+p
+
+d
+
+q
+
+sd
+
+J1
+
+J2
+
+J3
+
+K1
+
+K2
+
+K3
+
+arr1
+
+arr2
+
+arr3
+
+ar11
+
+ar22
+
+ar33
+
+maa1
+
+maa2
+
+maa3
+
+ma11
+
+ma22
+
+ma33
+
+n_cores
+
+:::
+::: {.column width="70%"}
+
+first seed boundary
+
+last seed boundary
+
+number of samples
+
+order of the autoregressive
+
+degree of difference
+
+degree of moving average
+
+standard deviation of the series
+
+length of character to search for in first coefficient of autoregressive (AR(1))
+
+length of character to search for in second coefficient of autoregressive (AR(2))
+
+length of character to search for in third coefficient of autoregressive  (AR(3))
+
+length of character to search for in first coefficient of moving average (MA(1))
+
+length of character to search for in second coefficient of moving average (MA(2))
+
+length of character to search for in third coefficient of moving average (MA(3))
+
+value of estimate of first coefficient of autoregressive (AR(1))
+
+value of estimate of second coefficient of autoregressive (AR(2))
+
+value of estimate of third coefficient of autoregressive (AR(3))
+
+character to search for in first coefficient of autoregressive (AR(1))
+
+character to search for in second coefficient of autoregressive (AR(2))
+
+character to search for in third coefficient of autoregressive (AR(3))
+
+value of estimate of first coefficient of moving average (MA(1))
+
+value of estimate of second coefficient of moving average (MA(2))
+
+value of estimate of third coefficient of moving average (MA(3))
+
+character to search for in first coefficient of moving average (MA(1))
+
+character to search for in second coefficient of moving average (MA(2))
+
+character to search for in third coefficient of moving average (MA(3))
+
+number of core(s) to be used on your operaterating system
+
+:::
+::::::::::::::
+
+### Output
+
+The section output a data frame with 5 rows 3 columns which are "Methods", "lb" and "RMSE". Method with the minimum RMSE value is 
+
+### Examples
+
+```{r simulate1, include = TRUE, eval = FALSE}
+
+paramsim::arimasim(a = 280000,  z = 290000, n = 10, p = 1, d = 0, q = 0, ar11 = 0.8, sd = 1, j1 = 4, arr1 = "0.80", n_cores = 1)
+
+#         ar1   seed
+# 7 0.8079816 282327
+# 5 0.8062789 283176
+# 6 0.8074425 284165
+# 8 0.8081475 284461
+# 4 0.8026127 287720
+# 9 0.8084755 288160
+# 3 0.8023778 289053
+# 1 0.8000000 289805
+# 2 0.8000368 289989
+```
+
+## vignette ##
+vignette("factors.cc", package="rQCC")
+
+
+## Reference

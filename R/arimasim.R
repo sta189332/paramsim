@@ -77,7 +77,7 @@
 #' @importFrom tibble tibble
 #'
 #' @example
-#' arimasim(a = 280000,  z = 290000, n = 10, p = 1, d = 0, q = 0, ar11 = 0.8, ar22 = 0.1, ar33 = 0.3, sd = sd, j1 = 4, j2 = 4, j3 = 4, arr1 = "0.80", arr2 = "0.30", arr3 = "0.30", n_cores = 1)
+#'   arimasim(a = 280000,  z = 281000, n = 10, p = 1, d = 0, q = 0, ar11 = 0.8, sd = 1, j1 = 4, arr1 = "0.80", n_cores = 1)
 #'
 #' @export
 arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = sd, j1, k1, j2, k2, j3, k3, arr1, maa1, arr2, maa2, arr3, maa3, n_cores){

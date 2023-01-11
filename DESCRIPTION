@@ -6,7 +6,7 @@ Authors@R: c(
   person("Daniel", "James", email = "futathesis@gmail.com", role = c("cre","aut")),
   person("Ayinde", "Kayode", email = "kayinde@futa.edu.ng", role = "aut"))
 Maintainer: Daniel James <futathesis@gmail.com>
-Description: This function obtains a Random Number Generator (RNG) or collection of RNGs that replicate the required parameter(s) of a distribution for a time series of data. Consider the case of reproducing a time series data set of size 20 that uses an autoregressive (AR) model with phi = "0.8" and standard deviation equal to 1. When one checks the "arima.sin" function's estimated parameters, it's possible that after a single trial or a few more, one won't find the precise parameters. This enables one to look for the ideal RNG setting for a simulation that will accurately duplicate the desired parameters.
+Description: This function obtains a Random Number Generator (RNG) or collection of RNGs that replicate the required parameter(s) of a distribution for a time series of data. Consider the case of reproducing a time series data set of size 20 that uses an autoregressive (AR) model with phi = 0.8 and standard deviation equal to 1. When one checks the arima.sin() function's estimated parameters, it's possible that after a single trial or a few more, one won't find the precise parameters. This enables one to look for the ideal RNG setting for a simulation that will accurately duplicate the desired parameters.
 Depends:
   R (>= 4.2.0)
 Imports:
@@ -23,7 +23,6 @@ RoxygenNote: 7.2.3
 LazyData: true
 Suggests: 
     knitr,
-    rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr

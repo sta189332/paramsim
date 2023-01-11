@@ -1,6 +1,8 @@
+#' @title Parameterized Simulation
+
 #' Search for rigth seeds for the rigth ARIMA simulation with arima.sin() function using auto.arima() function
 #'
-#' More detailed Description
+#' This function obtains a Random Number Generator (RNG) or collection of RNGs that replicate the required parameter(s) of a distribution for a time series of data. Consider the case of reproducing a time series data set of size 20 that uses an autoregressive (AR) model with phi = 0.8 and standard deviation equal to 1. When one checks the arima.sin() function's estimated parameters, it's possible that after a single trial or a few more, one won't find the precise parameters. This enables one to look for the ideal RNG setting for a simulation that will accurately duplicate the desired parameters.
 #'
 #' @describeIn This arimasim helps to Search for rigth seeds for the rigth AR simulation with arima.sin() finction using auto.arima() function
 #'
@@ -76,8 +78,10 @@
 #'
 #' @importFrom tibble tibble
 #'
+#' @return A data frame get printed to the console with its first colomn being the rank and the next few column could be the coefficients of AR or MA both with varying orders depending on the order and classes of ARIMA model being searched for. The last column of the data frame could be the intercept if any exist within the range of the search.
+#'
 #' @example
-#'   arimasim(a = 280000,  z = 281000, n = 10, p = 1, d = 0, q = 0, ar11 = 0.8, sd = 1, j1 = 4, arr1 = "0.80", n_cores = 1)
+#'   arimasim(a = 289800,  z = 289989, n = 10, p = 1, d = 0, q = 0, ar11 = 0.8, sd = 1, j1 = 4, arr1 = "0.80", n_cores = 1)
 #'
 #' @export
 arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = sd, j1, k1, j2, k2, j3, k3, arr1, maa1, arr2, maa2, arr3, maa3, n_cores){

@@ -2,7 +2,10 @@
 % Please edit documentation in R/arimasim.R
 \name{arimasim}
 \alias{arimasim}
-\title{Search for rigth seeds for the rigth ARIMA simulation with arima.sin() function using auto.arima() function}
+\title{Parameterized Simulation
+Search for rigth seeds for the rigth ARIMA simulation with arima.sin() function using auto.arima() function
+
+This function obtains a Random Number Generator (RNG) or collection of RNGs that replicate the required parameter(s) of a distribution for a time series of data. Consider the case of reproducing a time series data set of size 20 that uses an autoregressive (AR) model with phi = 0.8 and standard deviation equal to 1. When one checks the arima.sin() function's estimated parameters, it's possible that after a single trial or a few more, one won't find the precise parameters. This enables one to look for the ideal RNG setting for a simulation that will accurately duplicate the desired parameters.}
 \usage{
 arimasim(
   a,
@@ -86,8 +89,14 @@ arimasim(
 
 \item{n_cores}{number of core(s) to be used on your operaterating system}
 }
+\value{
+A data frame get printed to the console with its first colomn being the rank and the next few column could be the coefficients of AR or MA both with varying orders depending on the order and classes of ARIMA model being searched for. The last column of the data frame could be the intercept if any exist within the range of the search.
+}
 \description{
-More detailed Description
+Parameterized Simulation
+Search for rigth seeds for the rigth ARIMA simulation with arima.sin() function using auto.arima() function
+
+This function obtains a Random Number Generator (RNG) or collection of RNGs that replicate the required parameter(s) of a distribution for a time series of data. Consider the case of reproducing a time series data set of size 20 that uses an autoregressive (AR) model with phi = 0.8 and standard deviation equal to 1. When one checks the arima.sin() function's estimated parameters, it's possible that after a single trial or a few more, one won't find the precise parameters. This enables one to look for the ideal RNG setting for a simulation that will accurately duplicate the desired parameters.
 }
 \section{Functions}{
 \itemize{

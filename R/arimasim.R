@@ -82,6 +82,9 @@
 #'
 #' @example
 #'   arimasim(a = 289800,  z = 289989, n = 10, p = 1, d = 0, q = 0, ar11 = 0.8, sd = 1, j1 = 4, arr1 = "0.80", n_cores = 1)
+#'   set.seed(289805)
+#'   ts <- arima.sim(n = 10, model = list(ar = 0.8, order = c(1, 0, 0)), sd = 1)
+#'   forecast::auto.arima(ts)
 #'
 #' @export
 arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = sd, j1, k1, j2, k2, j3, k3, arr1, maa1, arr2, maa2, arr3, maa3, n_cores){
@@ -116,6 +119,7 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res1 = res[!sapply(res, anyNA)]
 
       parallel::stopCluster(cl)
+      on.exit(options())
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -160,6 +164,7 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res1 = res[!sapply(res, anyNA)]
 
       parallel::stopCluster(cl)
+      on.exit(options())
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -206,6 +211,7 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res1 = res[!sapply(res, anyNA)]
 
       parallel::stopCluster(cl)
+      on.exit(options())
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -250,6 +256,7 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res1 = res[!sapply(res, anyNA)]
 
       parallel::stopCluster(cl)
+      on.exit(options())
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -294,6 +301,7 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res1 = res[!sapply(res, anyNA)]
 
       parallel::stopCluster(cl)
+      on.exit(options())
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -337,6 +345,7 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res1 = res[!sapply(res, anyNA)]
 
       parallel::stopCluster(cl)
+      on.exit(options())
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -381,6 +390,7 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res1 = res[!sapply(res, anyNA)]
 
       parallel::stopCluster(cl)
+      on.exit(options())
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -427,6 +437,7 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res1 = res[!sapply(res, anyNA)]
 
       parallel::stopCluster(cl)
+      on.exit(options())
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -471,6 +482,7 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res1 = res[!sapply(res, anyNA)]
 
       parallel::stopCluster(cl)
+      on.exit(options())
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -517,6 +529,7 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res1 = res[!sapply(res, anyNA)]
 
       parallel::stopCluster(cl)
+      on.exit(options())
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -561,6 +574,7 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res1 = res[!sapply(res, anyNA)]
 
       parallel::stopCluster(cl)
+      on.exit(options())
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -605,6 +619,7 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res1 = res[!sapply(res, anyNA)]
 
       parallel::stopCluster(cl)
+      on.exit(options())
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -648,6 +663,7 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res1 = res[!sapply(res, anyNA)]
 
       parallel::stopCluster(cl)
+      on.exit(options())
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -692,6 +708,7 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res1 = res[!sapply(res, anyNA)]
 
       parallel::stopCluster(cl)
+      on.exit(options())
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -736,6 +753,7 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res1 = res[!sapply(res, anyNA)]
 
       parallel::stopCluster(cl)
+      on.exit(options())
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -781,6 +799,7 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res1 = res[!sapply(res, anyNA)]
 
       parallel::stopCluster(cl)
+      on.exit(options())
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))

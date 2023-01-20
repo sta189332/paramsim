@@ -169,11 +169,6 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
   } else if (p == 1 && q == 1) {
 
     arma1_sim_search <- function(a, z, n, ar11, ma11, p, d, q, sd = sd, j1, k1, arr1, maa1){
-
-      #n_cores <- parallel::detectCores()
-
-
-
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
       i <- a:z
@@ -215,11 +210,6 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
   } else if (p == 2 && q == 0) {
 
     ar2_sim_search <- function(a, z, n, ar11, ar22, p, d, q, sd = sd, j1, j2, arr1, arr2){
-
-      #n_cores <- parallel::detectCores()
-
-
-
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
       i <- a:z
@@ -261,11 +251,6 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
   } else if (p == 0 && q == 2) {
 
     ma2_sim_search <- function(a, z, n, ma11, ma22, p, d, q, sd = sd, k1, k2, maa1, maa2){
-
-      #n_cores <- parallel::detectCores()
-
-
-
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
       i <- a:z
@@ -306,11 +291,6 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
   } else if (p == 3 && q == 0) {
 
     ar3_sim_search <- function(a, z, n, ar11, ar22, ar33, p, d, q, sd = sd, j1, j2, j3, arr1, arr2, arr3){
-
-      #n_cores <- parallel::detectCores()
-
-
-
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
       i <- a:z
@@ -352,11 +332,6 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
   } else if (p == 3 && d == 1 && q == 0) {
 
     ma3_sim_search <- function(a, z, n, ma11, ma22, ma33, p, d, q, sd = sd, k1, k2, k3, maa1, maa2, maa3){
-
-      #n_cores <- parallel::detectCores()
-
-
-
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
       i <- a:z
@@ -400,11 +375,6 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
   } else if (p == 1 && d == 1 && q == 0) {
 
     ari1_sim_search <- function(a, z, n, ar11, p, d, q, sd = sd, j1, arr1){
-
-      #n_cores <- parallel::detectCores()
-
-
-
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
       i <- a:z
@@ -446,11 +416,6 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
   } else if (p == 0 && d == 1 && q == 1) {
 
     ima1_sim_search <- function(a, z, n, ma11, p, d, q, sd = sd, k1, maa1){
-
-      #n_cores <- parallel::detectCores()
-
-
-
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
       i <- a:z
@@ -494,11 +459,6 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
   } else if (p == 1 && d == 1 && q == 1) {
 
     arima11_sim_search <- function(a, z, n, ar11, ma11, p, d, q, sd = sd, j1, k1, arr1, maa1){
-
-      #n_cores <- parallel::detectCores()
-
-
-
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
       i <- a:z
@@ -540,11 +500,6 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
   } else if (p == 2 && d == 1 && q == 0) {
 
     ari2_sim_search <- function(a, z, n, ar11, ar22, p, d, q, sd = sd, j1, j2, arr1, arr2){
-
-      #n_cores <- parallel::detectCores()
-
-
-
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
       i <- a:z
@@ -586,11 +541,6 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
   } else if (p == 0 && d == 1 && q == 2) {
 
     ima2_sim_search <- function(a, z, n, ma11, ma22, p, d, q, sd = sd, k1, k2, maa1, maa2){
-
-      #n_cores <- parallel::detectCores()
-
-
-
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
       i <- a:z
@@ -631,11 +581,6 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
   } else if (p == 1 && d == 1 && q == 1) {
 
     arima22_sim_search <- function(a, z, n, ar11, ar22, ma11, ma22, p, d, q, sd = sd, j1, j2, k1, k2, arr1, arr2, maa1, maa2){
-
-      #n_cores <- parallel::detectCores()
-
-
-
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
       i <- a:z
@@ -677,11 +622,6 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
   } else if (p == 3 && d == 1 && q == 0) {
 
     ari3_sim_search <- function(a, z, n, ar11, ar22, ar33, p, d, q, sd = sd, j1, j2, j3, arr1, arr2, arr3){
-
-      #n_cores <- parallel::detectCores()
-
-
-
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
       i <- a:z
@@ -723,11 +663,6 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
   } else if (p == 0 && d == 1 && q == 3) {
 
     ima3_sim_search <- function(a, z, n, ma11, ma22, ma33, p, d, q, sd = sd, k1, k2, k3, maa1, maa2, maa3){
-
-      #n_cores <- parallel::detectCores()
-
-
-
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
       i <- a:z
@@ -769,11 +704,6 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
   } else {
 
     arima33_sim_search <- function(a, z, n, ar11, ar22, ar33, ma11, ma22, ma33, p, d, q, sd = 1, j1, j2, j3, k1, k2, k3, arr1, arr2, arr3, maa1, maa2, maa3){
-
-      #n_cores <- parallel::detectCores()
-
-
-
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
       i <- a:z

@@ -1,10 +1,10 @@
 #' @title Parameterized Simulation
-
+#'
+#' @describeIn This arimasim helps to Search for rigth seeds for the rigth AR simulation with arima.sin() finction using auto.arima() function
+#'
 #' Search for rigth seeds for the rigth ARIMA simulation with arima.sin() function using auto.arima() function
 #'
 #' This function obtains a Random Number Generator (RNG) or collection of RNGs that replicate the required parameter(s) of a distribution for a time series of data. Consider the case of reproducing a time series data set of size 20 that uses an autoregressive (AR) model with phi = 0.8 and standard deviation equal to 1. When one checks the arima.sin() function's estimated parameters, it's possible that after a single trial or a few more, one won't find the precise parameters. This enables one to look for the ideal RNG setting for a simulation that will accurately duplicate the desired parameters.
-#'
-#' @describeIn This arimasim helps to Search for rigth seeds for the rigth AR simulation with arima.sin() finction using auto.arima() function
 #'
 #' @param a first seed boundary
 #'
@@ -62,8 +62,6 @@
 #'
 #' @param maa3 character to search for in third coefficient of autoregressive
 #'
-#' @param n_cores number of core(s) to be used on your operaterating system
-#'
 #' @importFrom future plan multisession
 #'
 #' @importFrom parallel makeCluster stopCluster
@@ -80,22 +78,15 @@
 #'
 #' @return A data frame get printed to the console with its first colomn being the rank and the next few column could be the coefficients of AR or MA both with varying orders depending on the order and classes of ARIMA model being searched for. The last column of the data frame could be the intercept if any exist within the range of the search.
 #'
-#' @example
-#'   arimasim(a = 289800,  z = 289989, n = 10, p = 1, d = 0, q = 0, ar11 = 0.8, sd = 1, j1 = 4, arr1 = "0.80", n_cores = 1)
-#'   set.seed(289805)
-#'   ts <- arima.sim(n = 10, model = list(ar = 0.8, order = c(1, 0, 0)), sd = 1)
-#'   forecast::auto.arima(ts)
+#' @examples
+#'   arimasim(a= 289800,z= 289989,n= 10,p= 1,d= 0,q= 0,ar11= 0.8,sd = 1,j1= 4,arr1= "0.80")
 #'
 #' @export
-arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = sd, j1, k1, j2, k2, j3, k3, arr1, maa1, arr2, maa2, arr3, maa3, n_cores){
+arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = sd, j1, k1, j2, k2, j3, k3, arr1, maa1, arr2, maa2, arr3, maa3){
 
   output <- if (p == 1 && q == 0) {
 
-    ar1_sim_search <- function(a, z, n, ar11, p, d, q, sd = sd, j1, arr1, n_cores){
-      future::plan(future::multisession)
-      #n_cores <- parallel::detectCores()
-      cl <- parallel::makeCluster(n_cores)
-      doParallel::registerDoParallel(cores = n_cores)
+    ar1_sim_search <- function(a, z, n, ar11, p, d, q, sd = sd, j1, arr1){
 
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
@@ -117,9 +108,8 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       message(' done!\n')
 
       res1 = res[!sapply(res, anyNA)]
-
-      parallel::stopCluster(cl)
-      on.exit(options())
+      old <- options()
+      on.exit(options(old))
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -130,17 +120,13 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res2[order(res2$seed), ]
     }
 
-    ar1_sim_search(a = a,  z = z, n = n, p = 1, d = d, q = q, ar11 = ar11, sd = sd, j1 = j1, arr1 = arr1, n_cores = n_cores)
+    ar1_sim_search(a = a,  z = z, n = n, p = 1, d = d, q = q, ar11 = ar11, sd = sd, j1 = j1, arr1 = arr1)
 
     #####################################################################################################
 
   } else if (p == 0 && q == 1) {
 
-    ma1_sim_search <- function(a, z, n, ma11, p, d, q, sd = sd, k1, maa1, n_cores){
-      future::plan(future::multisession)
-      #n_cores <- parallel::detectCores()
-      cl <- parallel::makeCluster(n_cores)
-      doParallel::registerDoParallel(cores = n_cores)
+    ma1_sim_search <- function(a, z, n, ma11, p, d, q, sd = sd, k1, maa1){
 
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
@@ -162,9 +148,8 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       message(' done!\n')
 
       res1 = res[!sapply(res, anyNA)]
-
-      parallel::stopCluster(cl)
-      on.exit(options())
+      old <- options()
+      on.exit(options(old))
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -175,7 +160,7 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res2[order(res2$seed), ]
     }
 
-    ma1_sim_search(a = a,  z = z, n = n, p = p, d = d, q = 1, ma11 = ma11, sd = sd, k1 = k1, maa1 = maa1, n_cores)
+    ma1_sim_search(a = a,  z = z, n = n, p = p, d = d, q = 1, ma11 = ma11, sd = sd, k1 = k1, maa1 = maa1)
 
     #####################################################################################################
 
@@ -183,11 +168,11 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
 
   } else if (p == 1 && q == 1) {
 
-    arma1_sim_search <- function(a, z, n, ar11, ma11, p, d, q, sd = sd, j1, k1, arr1, maa1, n_cores){
-      future::plan(future::multisession)
+    arma1_sim_search <- function(a, z, n, ar11, ma11, p, d, q, sd = sd, j1, k1, arr1, maa1){
+
       #n_cores <- parallel::detectCores()
-      cl <- parallel::makeCluster(n_cores)
-      doParallel::registerDoParallel(cores = n_cores)
+
+
 
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
@@ -210,8 +195,9 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
 
       res1 = res[!sapply(res, anyNA)]
 
-      parallel::stopCluster(cl)
-      on.exit(options())
+
+      old <- options()
+      on.exit(options(old))
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -222,17 +208,17 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res2[order(res2$seed), ]
     }
 
-    arma1_sim_search(a = a,  z = z, n = n, p = 1, d = d, q = 1, ar11 = ar11, ma11 = ma11, sd = sd, j1 = j1, k1 = k1, arr1 = arr1, maa1 = maa1, n_cores = n_cores)
+    arma1_sim_search(a = a,  z = z, n = n, p = 1, d = d, q = 1, ar11 = ar11, ma11 = ma11, sd = sd, j1 = j1, k1 = k1, arr1 = arr1, maa1 = maa1)
 
     #####################################################################################################
 
   } else if (p == 2 && q == 0) {
 
-    ar2_sim_search <- function(a, z, n, ar11, ar22, p, d, q, sd = sd, j1, j2, arr1, arr2, n_cores){
-      future::plan(future::multisession)
+    ar2_sim_search <- function(a, z, n, ar11, ar22, p, d, q, sd = sd, j1, j2, arr1, arr2){
+
       #n_cores <- parallel::detectCores()
-      cl <- parallel::makeCluster(n_cores)
-      doParallel::registerDoParallel(cores = n_cores)
+
+
 
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
@@ -255,8 +241,9 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
 
       res1 = res[!sapply(res, anyNA)]
 
-      parallel::stopCluster(cl)
-      on.exit(options())
+
+      old <- options()
+      on.exit(options(old))
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -267,17 +254,17 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res2[order(res2$seed), ]
     }
 
-    ar2_sim_search(a = a,  z = z, n = n, p = 2, d = d, q = q, ar11 = ar11, ar22 = ar22, sd = sd, j1 = j1, j2 = j2, arr1 = arr1, arr2 = arr2, n_cores = n_cores)
+    ar2_sim_search(a = a,  z = z, n = n, p = 2, d = d, q = q, ar11 = ar11, ar22 = ar22, sd = sd, j1 = j1, j2 = j2, arr1 = arr1, arr2 = arr2)
 
     #####################################################################################################
 
   } else if (p == 0 && q == 2) {
 
-    ma2_sim_search <- function(a, z, n, ma11, ma22, p, d, q, sd = sd, k1, k2, maa1, maa2, n_cores){
-      future::plan(future::multisession)
+    ma2_sim_search <- function(a, z, n, ma11, ma22, p, d, q, sd = sd, k1, k2, maa1, maa2){
+
       #n_cores <- parallel::detectCores()
-      cl <- parallel::makeCluster(n_cores)
-      doParallel::registerDoParallel(cores = n_cores)
+
+
 
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
@@ -300,8 +287,9 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
 
       res1 = res[!sapply(res, anyNA)]
 
-      parallel::stopCluster(cl)
-      on.exit(options())
+
+      old <- options()
+      on.exit(options(old))
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -312,16 +300,16 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res2[order(res2$seed), ]
     }
 
-    ma2_sim_search(a = a,  z = z, n = n, p = 0, d = 0, q = 2, ma11 = ma11, ma22 = ma22, sd = sd, k1 = k1, k2 = k2, maa1 = maa1, maa2 = maa2, n_cores = n_cores)
+    ma2_sim_search(a = a,  z = z, n = n, p = 0, d = 0, q = 2, ma11 = ma11, ma22 = ma22, sd = sd, k1 = k1, k2 = k2, maa1 = maa1, maa2 = maa2)
     ##############################################################################
 
   } else if (p == 3 && q == 0) {
 
-    ar3_sim_search <- function(a, z, n, ar11, ar22, ar33, p, d, q, sd = sd, j1, j2, j3, arr1, arr2, arr3, n_cores){
-      future::plan(future::multisession)
+    ar3_sim_search <- function(a, z, n, ar11, ar22, ar33, p, d, q, sd = sd, j1, j2, j3, arr1, arr2, arr3){
+
       #n_cores <- parallel::detectCores()
-      cl <- parallel::makeCluster(n_cores)
-      doParallel::registerDoParallel(cores = n_cores)
+
+
 
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
@@ -344,8 +332,9 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
 
       res1 = res[!sapply(res, anyNA)]
 
-      parallel::stopCluster(cl)
-      on.exit(options())
+
+      old <- options()
+      on.exit(options(old))
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -356,17 +345,17 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res2[order(res2$seed), ]
     }
 
-    ar3_sim_search(a = a,  z = z, n = n, p = 3, d = d, q = q, ar11 = ar11, ar22 = ar22, ar33 = ar33, sd = sd, j1 = j1, j2 = j2, j3 = j3, arr1 = arr1, arr2 = arr2, arr3 = arr3, n_cores = n_cores)
+    ar3_sim_search(a = a,  z = z, n = n, p = 3, d = d, q = q, ar11 = ar11, ar22 = ar22, ar33 = ar33, sd = sd, j1 = j1, j2 = j2, j3 = j3, arr1 = arr1, arr2 = arr2, arr3 = arr3)
 
     #####################################################################################################
 
   } else if (p == 3 && d == 1 && q == 0) {
 
-    ma3_sim_search <- function(a, z, n, ma11, ma22, ma33, p, d, q, sd = sd, k1, k2, k3, maa1, maa2, maa3, n_cores){
-      future::plan(future::multisession)
+    ma3_sim_search <- function(a, z, n, ma11, ma22, ma33, p, d, q, sd = sd, k1, k2, k3, maa1, maa2, maa3){
+
       #n_cores <- parallel::detectCores()
-      cl <- parallel::makeCluster(n_cores)
-      doParallel::registerDoParallel(cores = n_cores)
+
+
 
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
@@ -389,8 +378,9 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
 
       res1 = res[!sapply(res, anyNA)]
 
-      parallel::stopCluster(cl)
-      on.exit(options())
+
+      old <- options()
+      on.exit(options(old))
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -401,7 +391,7 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res2[order(res2$seed), ]
     }
 
-    ma3_sim_search(a = a,  z = z, n = n, p = p, d = d, q = 3, ma11 = ma11, ma22 = ma22, ma33 = ma33, sd = sd, k1 = k1, k2 = k2, k3 = k3, maa1 = maa1, maa2 = maa2, maa3 = maa3, n_cores = n_cores)
+    ma3_sim_search(a = a,  z = z, n = n, p = p, d = d, q = 3, ma11 = ma11, ma22 = ma22, ma33 = ma33, sd = sd, k1 = k1, k2 = k2, k3 = k3, maa1 = maa1, maa2 = maa2, maa3 = maa3)
 
     #}
     ##############################################################################
@@ -409,11 +399,11 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
     ##############################################################################
   } else if (p == 1 && d == 1 && q == 0) {
 
-    ari1_sim_search <- function(a, z, n, ar11, p, d, q, sd = sd, j1, arr1, n_cores){
-      future::plan(future::multisession)
+    ari1_sim_search <- function(a, z, n, ar11, p, d, q, sd = sd, j1, arr1){
+
       #n_cores <- parallel::detectCores()
-      cl <- parallel::makeCluster(n_cores)
-      doParallel::registerDoParallel(cores = n_cores)
+
+
 
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
@@ -436,8 +426,9 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
 
       res1 = res[!sapply(res, anyNA)]
 
-      parallel::stopCluster(cl)
-      on.exit(options())
+
+      old <- options()
+      on.exit(options(old))
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -448,17 +439,17 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res2[order(res2$seed), ]
     }
 
-    ari1_sim_search(a = a,  z = z, n = n, p = 1, d = 1, q = q, ar11 = ar11, sd = sd, j1 = j1, arr1 = arr1, n_cores = n_cores)
+    ari1_sim_search(a = a,  z = z, n = n, p = 1, d = 1, q = q, ar11 = ar11, sd = sd, j1 = j1, arr1 = arr1)
 
     #####################################################################################################
 
   } else if (p == 0 && d == 1 && q == 1) {
 
-    ima1_sim_search <- function(a, z, n, ma11, p, d, q, sd = sd, k1, maa1, n_cores){
-      future::plan(future::multisession)
+    ima1_sim_search <- function(a, z, n, ma11, p, d, q, sd = sd, k1, maa1){
+
       #n_cores <- parallel::detectCores()
-      cl <- parallel::makeCluster(n_cores)
-      doParallel::registerDoParallel(cores = n_cores)
+
+
 
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
@@ -481,8 +472,9 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
 
       res1 = res[!sapply(res, anyNA)]
 
-      parallel::stopCluster(cl)
-      on.exit(options())
+
+      old <- options()
+      on.exit(options(old))
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -493,7 +485,7 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res2[order(res2$seed), ]
     }
 
-    ima1_sim_search(a = a,  z = z, n = n, p = p, d = 1, q = 1, ma11 = ma11, sd = sd, k1 = k1, maa1 = maa1, n_cores = n_cores)
+    ima1_sim_search(a = a,  z = z, n = n, p = p, d = 1, q = 1, ma11 = ma11, sd = sd, k1 = k1, maa1 = maa1)
 
     #####################################################################################################
 
@@ -501,11 +493,11 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
 
   } else if (p == 1 && d == 1 && q == 1) {
 
-    arima11_sim_search <- function(a, z, n, ar11, ma11, p, d, q, sd = sd, j1, k1, arr1, maa1, n_cores){
-      future::plan(future::multisession)
+    arima11_sim_search <- function(a, z, n, ar11, ma11, p, d, q, sd = sd, j1, k1, arr1, maa1){
+
       #n_cores <- parallel::detectCores()
-      cl <- parallel::makeCluster(n_cores)
-      doParallel::registerDoParallel(cores = n_cores)
+
+
 
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
@@ -528,8 +520,9 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
 
       res1 = res[!sapply(res, anyNA)]
 
-      parallel::stopCluster(cl)
-      on.exit(options())
+
+      old <- options()
+      on.exit(options(old))
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -540,17 +533,17 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res2[order(res2$seed), ]
     }
 
-    arima11_sim_search(a = a,  z = z, n = n, p = 1, d = 1, q = 1, ar11 = ar11, ma11 = ma11, sd = sd, j1 = j1, k1 = k1, arr1 = arr1, maa1 = maa1, n_cores = n_cores)
+    arima11_sim_search(a = a,  z = z, n = n, p = 1, d = 1, q = 1, ar11 = ar11, ma11 = ma11, sd = sd, j1 = j1, k1 = k1, arr1 = arr1, maa1 = maa1)
 
     #####################################################################################################
 
   } else if (p == 2 && d == 1 && q == 0) {
 
-    ari2_sim_search <- function(a, z, n, ar11, ar22, p, d, q, sd = sd, j1, j2, arr1, arr2, n_cores){
-      future::plan(future::multisession)
+    ari2_sim_search <- function(a, z, n, ar11, ar22, p, d, q, sd = sd, j1, j2, arr1, arr2){
+
       #n_cores <- parallel::detectCores()
-      cl <- parallel::makeCluster(n_cores)
-      doParallel::registerDoParallel(cores = n_cores)
+
+
 
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
@@ -573,8 +566,9 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
 
       res1 = res[!sapply(res, anyNA)]
 
-      parallel::stopCluster(cl)
-      on.exit(options())
+
+      old <- options()
+      on.exit(options(old))
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -585,17 +579,17 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res2[order(res2$seed), ]
     }
 
-    ari2_sim_search(a = a,  z = z, n = n, p = 2, d = 1, q = 0, ar11 = ar11, ar22 = ar22, sd = sd, j1 = j1, j2 = j2, arr1 = arr1, arr2 = arr2, n_cores = n_cores)
+    ari2_sim_search(a = a,  z = z, n = n, p = 2, d = 1, q = 0, ar11 = ar11, ar22 = ar22, sd = sd, j1 = j1, j2 = j2, arr1 = arr1, arr2 = arr2)
 
     #####################################################################################################
 
   } else if (p == 0 && d == 1 && q == 2) {
 
-    ima2_sim_search <- function(a, z, n, ma11, ma22, p, d, q, sd = sd, k1, k2, maa1, maa2, n_cores){
-      future::plan(future::multisession)
+    ima2_sim_search <- function(a, z, n, ma11, ma22, p, d, q, sd = sd, k1, k2, maa1, maa2){
+
       #n_cores <- parallel::detectCores()
-      cl <- parallel::makeCluster(n_cores)
-      doParallel::registerDoParallel(cores = n_cores)
+
+
 
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
@@ -618,8 +612,9 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
 
       res1 = res[!sapply(res, anyNA)]
 
-      parallel::stopCluster(cl)
-      on.exit(options())
+
+      old <- options()
+      on.exit(options(old))
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -630,16 +625,16 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res2[order(res2$seed), ]
     }
 
-    ima2_sim_search(a = a,  z = z, n = n, p = 0, d = 1, q = 2, ma11 = ma11, ma22 = ma22, sd = sd, k1 = k1, k2 = k2, maa1 = maa1, maa2 = maa2, n_cores = n_cores)
+    ima2_sim_search(a = a,  z = z, n = n, p = 0, d = 1, q = 2, ma11 = ma11, ma22 = ma22, sd = sd, k1 = k1, k2 = k2, maa1 = maa1, maa2 = maa2)
     ##############################################################################
 
   } else if (p == 1 && d == 1 && q == 1) {
 
-    arima22_sim_search <- function(a, z, n, ar11, ar22, ma11, ma22, p, d, q, sd = sd, j1, j2, k1, k2, arr1, arr2, maa1, maa2, n_cores){
-      future::plan(future::multisession)
+    arima22_sim_search <- function(a, z, n, ar11, ar22, ma11, ma22, p, d, q, sd = sd, j1, j2, k1, k2, arr1, arr2, maa1, maa2){
+
       #n_cores <- parallel::detectCores()
-      cl <- parallel::makeCluster(n_cores)
-      doParallel::registerDoParallel(cores = n_cores)
+
+
 
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
@@ -662,8 +657,9 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
 
       res1 = res[!sapply(res, anyNA)]
 
-      parallel::stopCluster(cl)
-      on.exit(options())
+
+      old <- options()
+      on.exit(options(old))
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -674,17 +670,17 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res2[order(res2$seed), ]
     }
 
-    arima22_sim_search(a = a,  z = z, n = n, p = 2, d = 1, q = 2, ar11 = ar11, ma11 = ma11, ar22 = ar22, ma22 = ma22, sd = sd, j1 = j1, j2 = j2, k1 = k1, k2 = k2, arr1 = arr1, arr2 = arr2, maa1 = maa1, maa2 = maa2, n_cores = n_cores)
+    arima22_sim_search(a = a,  z = z, n = n, p = 2, d = 1, q = 2, ar11 = ar11, ma11 = ma11, ar22 = ar22, ma22 = ma22, sd = sd, j1 = j1, j2 = j2, k1 = k1, k2 = k2, arr1 = arr1, arr2 = arr2, maa1 = maa1, maa2 = maa2)
     ##############################################################################
 
 
   } else if (p == 3 && d == 1 && q == 0) {
 
-    ari3_sim_search <- function(a, z, n, ar11, ar22, ar33, p, d, q, sd = sd, j1, j2, j3, arr1, arr2, arr3, n_cores){
-      future::plan(future::multisession)
+    ari3_sim_search <- function(a, z, n, ar11, ar22, ar33, p, d, q, sd = sd, j1, j2, j3, arr1, arr2, arr3){
+
       #n_cores <- parallel::detectCores()
-      cl <- parallel::makeCluster(n_cores)
-      doParallel::registerDoParallel(cores = n_cores)
+
+
 
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
@@ -707,8 +703,9 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
 
       res1 = res[!sapply(res, anyNA)]
 
-      parallel::stopCluster(cl)
-      on.exit(options())
+
+      old <- options()
+      on.exit(options(old))
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -719,17 +716,17 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res2[order(res2$seed), ]
     }
 
-    ari3_sim_search(a = a,  z = z, n = n, p = 3, d = 1, q = 0, ar11 = ar11, ar22 = ar22, ar33 = ar33, sd = sd, j1 = j1, j2 = j2, j3 = j3, arr1 = arr1, arr2 = arr2, arr3 = arr3, n_cores = n_cores)
+    ari3_sim_search(a = a,  z = z, n = n, p = 3, d = 1, q = 0, ar11 = ar11, ar22 = ar22, ar33 = ar33, sd = sd, j1 = j1, j2 = j2, j3 = j3, arr1 = arr1, arr2 = arr2, arr3 = arr3)
 
     #####################################################################################################
 
   } else if (p == 0 && d == 1 && q == 3) {
 
-    ima3_sim_search <- function(a, z, n, ma11, ma22, ma33, p, d, q, sd = sd, k1, k2, k3, maa1, maa2, maa3, n_cores){
-      future::plan(future::multisession)
+    ima3_sim_search <- function(a, z, n, ma11, ma22, ma33, p, d, q, sd = sd, k1, k2, k3, maa1, maa2, maa3){
+
       #n_cores <- parallel::detectCores()
-      cl <- parallel::makeCluster(n_cores)
-      doParallel::registerDoParallel(cores = n_cores)
+
+
 
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
@@ -752,8 +749,9 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
 
       res1 = res[!sapply(res, anyNA)]
 
-      parallel::stopCluster(cl)
-      on.exit(options())
+
+      old <- options()
+      on.exit(options(old))
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -764,17 +762,17 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res2[order(res2$seed), ]
     }
 
-    ima3_sim_search(a = a,  z = z, n = n, p = 0, d = 1, q = 3, ma11 = ma11, ma22 = ma22, ma33 = ma33, sd = sd, k1 = k1, k2 = k2, k3 = k3, maa1 = maa1, maa2 = maa2, maa3 = maa3, n_cores = n_cores)
+    ima3_sim_search(a = a,  z = z, n = n, p = 0, d = 1, q = 3, ma11 = ma11, ma22 = ma22, ma33 = ma33, sd = sd, k1 = k1, k2 = k2, k3 = k3, maa1 = maa1, maa2 = maa2, maa3 = maa3)
 
     ##############################################################################
 
   } else {
 
-    arima33_sim_search <- function(a, z, n, ar11, ar22, ar33, ma11, ma22, ma33, p, d, q, sd = 1, j1, j2, j3, k1, k2, k3, arr1, arr2, arr3, maa1, maa2, maa3, n_cores){
-      future::plan(future::multisession)
+    arima33_sim_search <- function(a, z, n, ar11, ar22, ar33, ma11, ma22, ma33, p, d, q, sd = 1, j1, j2, j3, k1, k2, k3, arr1, arr2, arr3, maa1, maa2, maa3){
+
       #n_cores <- parallel::detectCores()
-      cl <- parallel::makeCluster(n_cores)
-      doParallel::registerDoParallel(cores = n_cores)
+
+
 
       message('processing...')
       `%dopar%` <- foreach::`%dopar%`
@@ -798,8 +796,9 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
 
       res1 = res[!sapply(res, anyNA)]
 
-      parallel::stopCluster(cl)
-      on.exit(options())
+
+      old <- options()
+      on.exit(options(old))
       options(max.print = .Machine$integer.max)
 
       res2 <- tibble::tibble(Reduce(function(...) merge(..., all = T), lapply(res1, function(x) as.data.frame(t(x)))))
@@ -810,7 +809,7 @@ arimasim <- function(a, z, n, ar11, ma11, ar22, ma22, ar33, ma33, p, d, q, sd = 
       res2[order(res2$seed), ]
     }
 
-    arima33_sim_search(a = a,  z = z, n = n, p = 3, d = 1, q = 3, ar11 = ar11, ar22 = ar22, ar33 = ar33, ma11 = ma11, ma22 = ma22, ma33 = ma33, sd = sd, j1 = j1, j2 = j2, j3 = j3, k1 = k1, k2 = k2, k3 = k3, arr1 = arr1, arr2 = arr2, arr3 = arr3, maa1 = maa1, maa2 = maa2, maa3 = maa3, n_cores = n_cores)
+    arima33_sim_search(a = a,  z = z, n = n, p = 3, d = 1, q = 3, ar11 = ar11, ar22 = ar22, ar33 = ar33, ma11 = ma11, ma22 = ma22, ma33 = ma33, sd = sd, j1 = j1, j2 = j2, j3 = j3, k1 = k1, k2 = k2, k3 = k3, arr1 = arr1, arr2 = arr2, arr3 = arr3, maa1 = maa1, maa2 = maa2, maa3 = maa3)
 
   }
   ##############################################################################

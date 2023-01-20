@@ -1,4 +1,4 @@
-#' paramsimr Package
+#' paramsim Package
 #'
 #' Contains one function for creating paramererized simulation of ARIMA time series data
 #'

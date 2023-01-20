@@ -99,6 +99,6 @@ This function obtains a Random Number Generator (RNG) or collection of RNGs that
 
 }}
 \examples{
-  arimasim(a= 289800,z= 289989,n= 10,p= 1,d= 0,q= 0,ar11= 0.8,sd = 1,j1= 4,arr1= "0.80")
+  arimasim(a= 289805,z= 289806,n= 10,p= 1,d= 0,q= 0,ar11= 0.8,sd = 1,j1= 4,arr1= "0.80")
 
 }
